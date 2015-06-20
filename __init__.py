@@ -1,13 +1,13 @@
 from pprint import pprint
 from openpyxl import load_workbook
-from openpyxl.cell import get_column_letter
+from openpyxl.cell import get_column_letter, column_index_from_string
 from collections import OrderedDict
 
 def sql_safe_string(string):
-    safe_chars = [32,]
-    [safe_chars.append(i) for i in range(48, 58)]
-    [safe_chars.append(i) for i in range(65, 91)]
-    [safe_chars.append(i) for i in range(97, 122)]
+    safe_chars = [32,]  # space
+    [safe_chars.append(i) for i in range(48, 58)]  # 0 to 9
+    [safe_chars.append(i) for i in range(65, 91)]  # A to Z
+    [safe_chars.append(i) for i in range(97, 122)]  # a to z
 
     if not string:
         return ""
@@ -66,7 +66,7 @@ def sheet_to_dict(file_path, sheet_name=None, header_row=1, start_col='A'
     # Get the rows
     rows_range = "{start_col}{start_row}:{end_col}{end_row}".format(
         start_col = start_col,
-        end_col = get_column_letter(max_column),
+        end_col = get_column_letter(max_column - column_index_from_string(start_col) + 1),
         start_row = header_row + 1,
         end_row = max_row
     )
